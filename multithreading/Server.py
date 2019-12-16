@@ -18,19 +18,23 @@ class Server:
                 for each in self.client_list:
                     each.send(msg.encode('utf-8'))
 
-    def recvMsg(self):
+    def listenClient(self):
         while True:
             # 建立客户端连接
             client_socket, addr = self.server_socket.accept()
             print("连接地址:{}".format(str(addr)))
             if client_socket not in self.client_list:
                 self.client_list.append(client_socket)
-            while True:
-                data = client_socket.recv(1024)  # 读取已链接客户的发送的消息
+
+    def recvMsg(self):
+        while True:
+            for each_client_socket in self.client_list:
+                data = each_client_socket.recv(1024)
                 print(data.decode())
+                print(each_client_socket.type)
                 # echo
                 msg = data.decode()
-                client_socket.send(msg.encode('utf-8'))
+                each_client_socket.send(msg.encode('utf-8'))
 
     def config(self):
         self.server_socket.bind((self.ip, self.port))
@@ -39,10 +43,12 @@ class Server:
     def start(self):
         self.config()
         t1 = threading.Thread(target=self.sendMsg, args=())
-        t2 = threading.Thread(target=self.recvMsg, args=())
+        t2 = threading.Thread(target=self.listenClient, args=())
+        t3 = threading.Thread(target=self.recvMsg, args=())
 
         t1.start()
         t2.start()
+        t3.start()
 
 
 if __name__ == '__main__':
