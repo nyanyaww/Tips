@@ -28,14 +28,14 @@ class MultiClient(Client):
 
 
 if __name__ == '__main__':
-    p = multiprocessing.Pool(10)
-
-    for i in range(10):
-        client = MultiClient(i)
-        sleep(0.5)
-        p.apply_async(client.start, )
-
-    print("init success!")
-
-    p.close()
-    p.join()
+    # p = multiprocessing.Pool(1000)
+    #
+    # for i in range(1000):
+    #     client = MultiClient(i)
+    #     p.apply_async(client.start, )
+    #
+    # print("init success!")
+    #
+    # p.close()
+    # p.join()
+    print(multiprocessing.Pool())

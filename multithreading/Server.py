@@ -29,12 +29,15 @@ class Server:
     def recvMsg(self):
         while True:
             for each_client_socket in self.client_list:
-                data = each_client_socket.recv(1024)
-                print(data.decode())
-                print(each_client_socket.type)
-                # echo
-                msg = data.decode()
-                each_client_socket.send(msg.encode('utf-8'))
+                try:
+                    data = each_client_socket.recv(1024)
+                    print(data.decode())
+                    # echo
+                    msg = data.decode()
+                    each_client_socket.send(msg.encode('utf-8'))
+                except IOError:
+                    print("没了")
+                    each_client_socket.close()
 
     def config(self):
         self.server_socket.bind((self.ip, self.port))
