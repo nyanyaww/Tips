@@ -1,21 +1,37 @@
-import socket
 import time
+import socket
+import threading
 
-# 创建 socket 对象
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# 获取本地主机名
-host = socket.gethostname()
+class Client:
+    def __init__(self):
+        self.ip = "127.0.0.1"
+        self.port = 2000
+        self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# 设置端口号
-port = 2000
+    def sendMsg(self):
+        while True:
+            msg = input(">>")
+            self.client_socket.send(msg.encode("utf-8"))
 
-# 连接服务，指定主机和端口
-s.connect(("127.0.0.1", port))
+    def recvMsg(self):
+        while True:
+            msg = self.client_socket.recv(1024)
+            print(msg.decode())
 
-while True:
-    s.send("hello".encode("utf-8"))
-    # 接收小于 1024 字节的数据
-    msg = s.recv(1024)
-    print(msg.decode('utf-8'))
-    time.sleep(2)
+    def config(self):
+        self.client_socket.connect((self.ip, self.port))
+
+    def start(self):
+        self.config()
+
+        t1 = threading.Thread(target=self.sendMsg, args=())
+        t2 = threading.Thread(target=self.recvMsg, args=())
+
+        t1.start()
+        t2.start()
+
+
+if __name__ == '__main__':
+    client = Client()
+    client.start()

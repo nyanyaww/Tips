@@ -22,13 +22,14 @@ class Server:
         while True:
             # 建立客户端连接
             client_socket, addr = self.server_socket.accept()
-            print("连接地址: %s" % str(addr))
+            print("连接地址:{}".format(str(addr)))
             if client_socket not in self.client_list:
                 self.client_list.append(client_socket)
             while True:
                 data = client_socket.recv(1024)  # 读取已链接客户的发送的消息
-                print(data)
-                msg = '欢迎访问菜鸟教程！' + "\r\n"
+                print(data.decode())
+                # echo
+                msg = data.decode()
                 client_socket.send(msg.encode('utf-8'))
 
     def config(self):
