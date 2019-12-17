@@ -1,5 +1,5 @@
-from multithreading.Server import Server
-from multithreading.Client import Client
+from Server import Server
+from Client import Client
 import multiprocessing
 
 
